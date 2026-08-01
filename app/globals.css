@@ -1,26 +1,145 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   LAYER 1 — RAW PALETTE.  The ONLY place in the codebase with hex.
+   Change a value here → it changes everywhere.  (See Plan/UI.md)
+   ───────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --maroon-900: #3d0e0f;
+  --maroon-700: #5a1a1b;
+  --maroon-500: #7a2a2b;
+  --marigold-500: #f2a900;
+  --marigold-300: #ffc94d;
+  --himalaya-700: #003893;
+  --himalaya-400: #4c7bd9;
+  --crimson-500: #dc143c;
+  --paper-50: #fbf7f0;
+  --paper-100: #f3ece0;
+  --ink-900: #241c1c;
+  --ink-500: #6b5e5c;
+  --line-200: #e3d8c9;
+  --success-500: #2e7d5b;
+  --warning-500: #c77d0a;
+  --danger-500: #c0392b;
+
+  /* LAYER 2 — SEMANTIC TOKENS.  Components bind to these via utilities. */
+  --background: var(--paper-50);
+  --foreground: var(--ink-900);
+  --surface: #ffffff;
+  --surface-muted: var(--paper-100);
+  --border: var(--line-200);
+  --muted: var(--ink-500);
+
+  --primary: var(--maroon-700);
+  --primary-foreground: var(--paper-50);
+  --primary-hover: var(--maroon-500);
+
+  --accent: var(--marigold-500);
+  --accent-foreground: var(--maroon-900);
+  --accent-hover: var(--marigold-300);
+
+  --secondary: var(--himalaya-700);
+  --secondary-foreground: #ffffff;
+
+  --highlight: var(--crimson-500);
+  --ring: var(--marigold-500);
+
+  --success: var(--success-500);
+  --warning: var(--warning-500);
+  --danger: var(--danger-500);
 }
 
+/* DARK MODE — repoint semantic tokens only. Components never change. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #1a1213;
+    --foreground: #f3ece0;
+    --surface: #241819;
+    --surface-muted: #2e2021;
+    --border: #3a2a2b;
+    --muted: #b7a79f;
+
+    --primary: #8a3a3b;
+    --primary-foreground: #fbf7f0;
+    --primary-hover: #a24a4b;
+
+    --accent: var(--marigold-300);
+    --accent-foreground: #241213;
+
+    --secondary: var(--himalaya-400);
+    --secondary-foreground: #0b1220;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LAYER 3 — expose semantic tokens to Tailwind as utilities.
+   `@theme inline` keeps utilities pointing at var(--…) so dark mode flows through.
+   Enables: bg-primary, text-foreground, border-border, ring-ring, etc.
+   ───────────────────────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-highlight: var(--highlight);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --color-ring: var(--ring);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-bricolage); /* headings — characterful grotesque */
+  --font-nepali: var(--font-baloo); /* नमस्ते + festival words — warm, rounded, Devanagari */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Hero entrance — one orchestrated moment. Reduced-motion rule below zeroes it out. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
   }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+html {
+  scroll-padding-top: 5rem; /* offset for the sticky header on in-page anchors */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
